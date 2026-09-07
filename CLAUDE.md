@@ -15,6 +15,7 @@ Personal, mobile-first, local-only web app for organizing reading/notes by topic
 - **@xyflow/svelte 1.6.x** (Svelte Flow) for the Map view — requires Svelte ^5.25, handles touch drag/pan/zoom and connections out of the box.
 - No router library — `src/router.js` is a ~20-line hash router (`#/topics`, `#/topics/:id`, `#/entry/:id`, `#/notes`, `#/map`, `#/settings`). Back button works via `window.history`.
 - No WYSIWYG/rich-text library — `src/components/MarkdownEditor.svelte` is a `<textarea>` + custom mobile-friendly formatting toolbar that inserts markdown syntax at the cursor, plus a preview toggle rendered via `src/lib/markdown.js` (hand-rolled, minimal markdown → HTML).
+- **Icons: `@lucide/svelte`** (not the deprecated `lucide-svelte` package). Always import per-icon from the subpath for tree-shaking: `import ArrowLeft from '@lucide/svelte/icons/arrow-left'` (kebab-case path, PascalCase local name), never the barrel `@lucide/svelte` import. No emoji or raw Unicode glyphs anywhere in the UI — the user explicitly asked for a real icon pack instead; keep it that way for any new UI.
 - Storage is **entirely local**: one JSON blob in `localStorage` (key `learnmo-data-v1`), managed by `src/lib/store.js`. No backend, no login, no cross-device sync (user's explicit choice — export/import JSON from Settings is the only backup path, via `src/lib/backup.js`).
 
 ## Critical gotcha: immutable store updates required
@@ -52,7 +53,8 @@ src/
     NotesPage.svelte, FlowChart.svelte, SettingsPage.svelte
   components/
     BottomNav, StatusBadge, TopicCard, EntryCard, NoteItem,
-    MarkdownEditor (toolbar + textarea + preview), CopyableTextBox (prompt box + copy button)
+    MarkdownEditor (toolbar + textarea + preview), CopyableTextBox (prompt box + copy button),
+    FlowNodeItem (custom Svelte Flow node: icon by refType + label + top/bottom Handles)
 public/icons/           # PWA icons (placeholder "LM" mark generated via Pillow — replace with real branding whenever the user has one)
 screenshots/            # used by README.md; regenerate when the UI changes meaningfully
 ```
@@ -61,7 +63,7 @@ screenshots/            # used by README.md; regenerate when the UI changes mean
 
 Two copy-paste prompt templates live in `src/lib/prompts.js`:
 1. `CONTENT_PROMPT` — makes an external LLM output markdown matching this app's conventions, ready to paste into an entry.
-2. `FLOW_LAYOUT_PROMPT` — makes an external LLM return `{ nodes: [{label,x,y}], edges: [{source,target}] }`; pasted into the Map view's "Import layout JSON" box (⇩ icon), which matches nodes by label (case-insensitive) via `importFlowLayout()` in `store.js`.
+2. `FLOW_LAYOUT_PROMPT` — makes an external LLM return `{ nodes: [{label,x,y}], edges: [{source,target}] }`; pasted into the Map view's "Import layout JSON" box (Download icon, top right), which matches nodes by label (case-insensitive) via `importFlowLayout()` in `store.js`.
 
 ## Current status
 
@@ -69,7 +71,6 @@ Initial build complete and manually verified end-to-end with Playwright against 
 
 Known rough edges / possible next steps if the user asks:
 - No topic rename UI yet (only create + delete).
-- Flow Chart nodes are all the default Svelte Flow node style differentiated only by an emoji prefix (📚/📄/📝) — could add real custom node components later if the user wants richer styling.
 - PWA icons are placeholder "LM" monogram — swap for real branding when available.
 - No automated test suite — verification so far has been manual/Playwright-scripted, not committed as a repo test suite.
 
