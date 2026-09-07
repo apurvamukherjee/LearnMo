@@ -75,7 +75,9 @@ export function renderMarkdown(source) {
         listType = 'checklist';
       }
       const checked = checklist[1].toLowerCase() === 'x';
-      html.push(`<li class="${checked ? 'checked' : ''}">${inline(checklist[2])}</li>`);
+      html.push(
+        `<li class="${checked ? 'checked' : ''}"><input type="checkbox" disabled ${checked ? 'checked' : ''}> ${inline(checklist[2])}</li>`
+      );
       continue;
     }
 

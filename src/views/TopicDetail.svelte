@@ -1,4 +1,7 @@
 <script>
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import Plus from '@lucide/svelte/icons/plus';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
   import { data, addEntry, deleteTopic } from '../lib/store.js';
   import { navigate, goBack } from '../router.js';
   import EntryCard from '../components/EntryCard.svelte';
@@ -34,9 +37,9 @@
 
 <div class="page">
   <header>
-    <button class="icon-btn" onclick={goBack} aria-label="Back">←</button>
+    <button class="icon-btn" onclick={goBack} aria-label="Back"><ArrowLeft size={20} /></button>
     <h1>{topic ? topic.title : 'Topic'}</h1>
-    <button class="icon-btn" onclick={() => (showAdd = !showAdd)} aria-label="Add entry">+</button>
+    <button class="icon-btn" onclick={() => (showAdd = !showAdd)} aria-label="Add entry"><Plus size={20} /></button>
   </header>
 
   {#if showAdd}
@@ -66,7 +69,7 @@
   </div>
 
   {#if topic}
-    <button class="delete-topic" onclick={removeTopic}>Delete topic</button>
+    <button class="delete-topic" onclick={removeTopic}><Trash2 size={14} /> Delete topic</button>
   {/if}
 </div>
 
@@ -126,6 +129,9 @@
   }
 
   .delete-topic {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin-top: 24px;
     align-self: center;
     background: none;

@@ -1,4 +1,7 @@
 <script>
+  import Check from '@lucide/svelte/icons/check';
+  import Copy from '@lucide/svelte/icons/copy';
+
   let { title = '', description = '', text = '' } = $props();
 
   let copied = $state(false);
@@ -28,7 +31,9 @@
       <h4>{title}</h4>
       {#if description}<p class="desc">{description}</p>{/if}
     </div>
-    <button class="copy-btn" onclick={copy}>{copied ? 'Copied ✓' : 'Copy'}</button>
+    <button class="copy-btn" onclick={copy}>
+      {#if copied}<Check size={15} strokeWidth={3} /> Copied{:else}<Copy size={15} /> Copy{/if}
+    </button>
   </div>
   <pre class="content">{text}</pre>
 </div>
@@ -63,6 +68,9 @@
   }
 
   .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     flex-shrink: 0;
     border: none;
     border-radius: 8px;

@@ -1,5 +1,7 @@
 <script>
   import { untrack } from 'svelte';
+  import Check from '@lucide/svelte/icons/check';
+  import X from '@lucide/svelte/icons/x';
   import { autofocus } from '../lib/actions.js';
 
   let { text, done, ontoggle, ondelete, onedit } = $props();
@@ -21,7 +23,7 @@
 
 <div class="row">
   <button class="check" class:done aria-label="Toggle done" onclick={ontoggle}>
-    {#if done}✓{/if}
+    {#if done}<Check size={15} strokeWidth={3} />{/if}
   </button>
 
   {#if editing}
@@ -36,7 +38,7 @@
     <button class="text" class:done onclick={startEdit}>{text}</button>
   {/if}
 
-  <button class="icon-btn del" aria-label="Delete note" onclick={ondelete}>✕</button>
+  <button class="icon-btn del" aria-label="Delete note" onclick={ondelete}><X size={17} /></button>
 </div>
 
 <style>

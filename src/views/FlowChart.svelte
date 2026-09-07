@@ -1,8 +1,10 @@
 <script>
   import { SvelteFlow, Background, Controls, BackgroundVariant } from '@xyflow/svelte';
+  import Download from '@lucide/svelte/icons/download';
   import { data, updateNodePosition, addFlowEdge, importFlowLayout } from '../lib/store.js';
+  import FlowNodeItem from '../components/FlowNodeItem.svelte';
 
-  const typeIcon = { topic: '📚', entry: '📄', note: '📝' };
+  const nodeTypes = { item: FlowNodeItem };
 
   let nodes = $state.raw([]);
   let edges = $state.raw([]);
@@ -10,8 +12,8 @@
   $effect(() => {
     nodes = $data.flowNodes.map((n) => ({
       id: n.id,
-      type: 'default',
-      data: { label: `${typeIcon[n.refType] ?? ''} ${n.label}` },
+      type: 'item',
+      data: { label: n.label, refType: n.refType },
       position: { x: n.x, y: n.y }
     }));
   });
@@ -48,7 +50,9 @@
 <div class="page">
   <header>
     <h1>Map</h1>
-    <button class="icon-btn" onclick={() => (showImport = !showImport)} aria-label="Import layout">⇩</button>
+    <button class="icon-btn" onclick={() => (showImport = !showImport)} aria-label="Import layout">
+      <Download size={19} />
+    </button>
   </header>
 
   {#if showImport}
@@ -66,7 +70,7 @@
     <p class="empty">Add a topic, entry or note first — it'll show up here automatically.</p>
   {:else}
     <div class="canvas">
-      <SvelteFlow bind:nodes bind:edges onnodedragstop={handleDragStop} onconnect={handleConnect} fitView>
+      <SvelteFlow bind:nodes bind:edges {nodeTypes} onnodedragstop={handleDragStop} onconnect={handleConnect} fitView>
         <Background variant={BackgroundVariant.Dots} />
         <Controls showLock={false} />
       </SvelteFlow>
@@ -136,7 +140,7 @@
     background: var(--bg);
   }
 
-  :global(.svelte-flow__node-default) {
+  :global(.svelte-flow__node-item) {
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text);
@@ -146,7 +150,7 @@
     width: auto;
   }
 
-  :global(.svelte-flow__node-default.selected) {
+  :global(.svelte-flow__node-item.selected) {
     border-color: var(--accent);
   }
 

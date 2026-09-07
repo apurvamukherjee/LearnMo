@@ -1,5 +1,8 @@
 <script>
   import { untrack } from 'svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
+  import Check from '@lucide/svelte/icons/check';
   import { data, updateEntry, deleteEntry } from '../lib/store.js';
   import { goBack, navigate } from '../router.js';
   import MarkdownEditor from '../components/MarkdownEditor.svelte';
@@ -45,13 +48,14 @@
 {#if entry}
   <div class="page">
     <header>
-      <button class="icon-btn" onclick={goBack} aria-label="Back">←</button>
+      <button class="icon-btn" onclick={goBack} aria-label="Back"><ArrowLeft size={20} /></button>
       <input class="title-input" bind:value={title} placeholder="Entry title" />
-      <button class="icon-btn" onclick={removeEntry} aria-label="Delete entry">🗑</button>
+      <button class="icon-btn" onclick={removeEntry} aria-label="Delete entry"><Trash2 size={19} /></button>
     </header>
 
     <button class="status-toggle" class:done={entry.status === 'done'} onclick={toggleDone}>
-      {entry.status === 'done' ? '✓ Done reading' : 'Mark as done'}
+      {#if entry.status === 'done'}<Check size={15} strokeWidth={3} />{/if}
+      {entry.status === 'done' ? 'Done reading' : 'Mark as done'}
     </button>
 
     <MarkdownEditor bind:value={content} placeholder="Add your notes and content here…" />
@@ -90,6 +94,9 @@
   }
 
   .status-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     align-self: flex-start;
     margin-bottom: 12px;
     border: 1px solid var(--border);

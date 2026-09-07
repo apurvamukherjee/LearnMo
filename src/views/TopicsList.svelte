@@ -1,4 +1,5 @@
 <script>
+  import Plus from '@lucide/svelte/icons/plus';
   import { data, addTopic } from '../lib/store.js';
   import { navigate } from '../router.js';
   import TopicCard from '../components/TopicCard.svelte';
@@ -29,7 +30,7 @@
 <div class="page">
   <header>
     <h1>Topics</h1>
-    <button class="icon-btn" onclick={() => (showAdd = !showAdd)} aria-label="Add topic">+</button>
+    <button class="icon-btn" onclick={() => (showAdd = !showAdd)} aria-label="Add topic"><Plus size={20} /></button>
   </header>
 
   {#if showAdd}

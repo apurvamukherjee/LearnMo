@@ -1,5 +1,18 @@
 <script>
   import { tick } from 'svelte';
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Heading1 from '@lucide/svelte/icons/heading-1';
+  import Heading2 from '@lucide/svelte/icons/heading-2';
+  import Heading3 from '@lucide/svelte/icons/heading-3';
+  import List from '@lucide/svelte/icons/list';
+  import ListOrdered from '@lucide/svelte/icons/list-ordered';
+  import ListTodo from '@lucide/svelte/icons/list-todo';
+  import Quote from '@lucide/svelte/icons/quote';
+  import Code from '@lucide/svelte/icons/code';
+  import Link2 from '@lucide/svelte/icons/link-2';
+  import Eye from '@lucide/svelte/icons/eye';
+  import Pencil from '@lucide/svelte/icons/pencil';
   import { renderMarkdown } from '../lib/markdown.js';
 
   let { value = $bindable(''), placeholder = 'Start writing…' } = $props();
@@ -46,17 +59,17 @@
   }
 
   const tools = [
-    { label: 'B', title: 'Bold', action: () => wrapSelection('**', '**', 'bold text') },
-    { label: 'I', title: 'Italic', action: () => wrapSelection('*', '*', 'italic text') },
-    { label: 'H1', title: 'Heading 1', action: () => insertAtLineStart('# ') },
-    { label: 'H2', title: 'Heading 2', action: () => insertAtLineStart('## ') },
-    { label: 'H3', title: 'Heading 3', action: () => insertAtLineStart('### ') },
-    { label: '•', title: 'Bullet list', action: () => insertAtLineStart('- ') },
-    { label: '1.', title: 'Numbered list', action: () => insertAtLineStart('1. ') },
-    { label: '☑', title: 'Checklist', action: () => insertAtLineStart('- [ ] ') },
-    { label: '"', title: 'Quote', action: () => insertAtLineStart('> ') },
-    { label: '</>', title: 'Code', action: () => wrapSelection('`', '`', 'code') },
-    { label: '🔗', title: 'Link', action: () => wrapSelection('[', '](https://)', 'link text') }
+    { icon: Bold, title: 'Bold', action: () => wrapSelection('**', '**', 'bold text') },
+    { icon: Italic, title: 'Italic', action: () => wrapSelection('*', '*', 'italic text') },
+    { icon: Heading1, title: 'Heading 1', action: () => insertAtLineStart('# ') },
+    { icon: Heading2, title: 'Heading 2', action: () => insertAtLineStart('## ') },
+    { icon: Heading3, title: 'Heading 3', action: () => insertAtLineStart('### ') },
+    { icon: List, title: 'Bullet list', action: () => insertAtLineStart('- ') },
+    { icon: ListOrdered, title: 'Numbered list', action: () => insertAtLineStart('1. ') },
+    { icon: ListTodo, title: 'Checklist', action: () => insertAtLineStart('- [ ] ') },
+    { icon: Quote, title: 'Quote', action: () => insertAtLineStart('> ') },
+    { icon: Code, title: 'Code', action: () => wrapSelection('`', '`', 'code') },
+    { icon: Link2, title: 'Link', action: () => wrapSelection('[', '](https://)', 'link text') }
   ];
 </script>
 
@@ -64,13 +77,13 @@
   <div class="toolbar">
     <div class="tools">
       {#each tools as tool}
-        <button type="button" title={tool.title} disabled={previewMode} onclick={tool.action}>
-          {tool.label}
+        <button type="button" title={tool.title} aria-label={tool.title} disabled={previewMode} onclick={tool.action}>
+          <tool.icon size={18} />
         </button>
       {/each}
     </div>
     <button type="button" class="preview-toggle" onclick={() => (previewMode = !previewMode)}>
-      {previewMode ? 'Edit' : 'Preview'}
+      {#if previewMode}<Pencil size={15} /> Edit{:else}<Eye size={15} /> Preview{/if}
     </button>
   </div>
 
@@ -115,14 +128,15 @@
 
   .tools button {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 40px;
     height: 40px;
     border: none;
     border-radius: 8px;
     background: transparent;
     color: var(--text);
-    font-size: 14px;
-    font-weight: 700;
   }
 
   .tools button:active {
@@ -134,6 +148,9 @@
   }
 
   .preview-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     flex-shrink: 0;
     height: 40px;
     padding: 0 14px;
@@ -180,12 +197,18 @@
     padding-left: 4px;
   }
 
-  .preview :global(ul.checklist li)::before {
-    content: '☐ ';
+  .preview :global(ul.checklist li) {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
   }
 
-  .preview :global(ul.checklist li.checked)::before {
-    content: '☑ ';
+  .preview :global(ul.checklist input[type='checkbox']) {
+    accent-color: var(--done);
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    transform: translateY(1px);
   }
 
   .preview :global(ul.checklist li.checked) {
